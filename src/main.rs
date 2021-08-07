@@ -1,5 +1,4 @@
 #![allow(dead_code)]
-#![feature(variant_count)]
 #![feature(exclusive_range_pattern)]
 
 mod instruction;
