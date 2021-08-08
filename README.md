@@ -11,7 +11,7 @@ This will deserialize a slightly modified Lua 5.1.5 bytecode format.
 * Instruction operation code is a byte instead of 6 bits
 * Instruction argument B is a byte instead of 9 bits
 * Instruction argument C is a byte instead of 9 bits
-* Instruction argument Bx is 16 bits instead of 18 bits
+* Instruction argument Bx is 2 bytes instead of 18 bits
 
 ### Purpose
 
