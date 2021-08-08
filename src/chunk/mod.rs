@@ -8,9 +8,9 @@ mod function;
 
 #[derive(Debug)]
 pub struct Chunk<'a> {
-    header: header::Header,
-    source_name: &'a str,
-    main: function::Function<'a>,
+	header: header::Header,
+	source_name: &'a str,
+	main: function::Function<'a>,
 }
 
 named!(

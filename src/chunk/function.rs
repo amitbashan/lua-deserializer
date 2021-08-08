@@ -1,18 +1,18 @@
 use nom::{*, number::complete::*};
 
 use crate::{
-    instruction::{*, parse as parse_instruction},
-    value::{*, parse as parse_value},
+	instruction::{*, parse as parse_instruction},
+	value::{*, parse as parse_value},
 };
 
 #[derive(Debug)]
 pub struct Function<'a> {
-    pub line_defined: u32,
-    pub last_line_defined: u32,
-    pub maximum_stack_size: u8,
-    pub code: Vec<Instruction>,
-    pub constants: Vec<Value<'a>>,
-    pub closures: Vec<Function<'a>>,
+	pub line_defined: u32,
+	pub last_line_defined: u32,
+	pub maximum_stack_size: u8,
+	pub code: Vec<Instruction>,
+	pub constants: Vec<Value<'a>>,
+	pub closures: Vec<Function<'a>>,
 }
 
 named!(

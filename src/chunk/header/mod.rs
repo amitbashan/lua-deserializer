@@ -6,14 +6,14 @@ mod integral_flag;
 
 #[derive(Debug)]
 pub struct Header {
-    version_number: u8,
-    version: version::Version,
-    endianness: endianness::Endianness,
-    size_of_integer: u8,
-    size_of_size_t: u8,
-    size_of_instruction: u8,
-    size_of_lua_number: u8,
-    integral_flag: integral_flag::IntegralFlag,
+	version_number: u8,
+	version: version::Version,
+	endianness: endianness::Endianness,
+	size_of_integer: u8,
+	size_of_size_t: u8,
+	size_of_instruction: u8,
+	size_of_lua_number: u8,
+	integral_flag: integral_flag::IntegralFlag,
 }
 
 named!(

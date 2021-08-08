@@ -1,4 +1,4 @@
-use nom::{*, number::complete::*};
+use nom::*;
 
 use crate::instruction::argument::*;
 
@@ -6,22 +6,22 @@ pub mod argument;
 
 #[derive(Debug)]
 pub enum Instruction {
-    ABC {
-        operation_code: u8,
-        a: u8,
-        b: u8,
-        c: u8,
-    },
-    ABx {
-        operation_code: u8,
-        a: u8,
-        bx: u16,
-    },
-    AsBx {
-        operation_code: u8,
-        a: u8,
-        sbx: i16,
-    },
+	ABC {
+		operation_code: u8,
+		a: u8,
+		b: u8,
+		c: u8,
+	},
+	ABx {
+		operation_code: u8,
+		a: u8,
+		bx: u16,
+	},
+	AsBx {
+		operation_code: u8,
+		a: u8,
+		sbx: i16,
+	},
 }
 
 named!(parse_operation_code(&[u8]) -> u8, bits!(take_bits!(8usize)));
@@ -108,4 +108,3 @@ named!(
 		(instruction)
 	)
 );
-

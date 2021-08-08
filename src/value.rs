@@ -2,10 +2,10 @@ use nom::{*, number::complete::*};
 
 #[derive(Debug)]
 pub enum Value<'a> {
-    Nil,
-    Boolean(bool),
-    Number(f64),
-    String(&'a str),
+	Nil,
+	Boolean(bool),
+	Number(f64),
+	String(&'a str),
 }
 
 named!(
