@@ -1,10 +1,12 @@
-use nom::{*, number::complete::*};
+use nom::*;
 
 use function::parse as parse_function;
 use header::parse as parse_header;
 
-mod header;
-mod function;
+use crate::value::parse_str;
+
+pub mod header;
+pub mod function;
 
 #[derive(Debug)]
 pub struct Chunk<'a> {
@@ -17,8 +19,7 @@ named!(
 	pub parse(&[u8]) -> Chunk,
 	do_parse!(
 		header: parse_header >>
-		source_name_length: le_u32 >>
-		source_name: take_str!(source_name_length) >>
+		source_name: parse_str >>
 		main: parse_function >>
 		(
 			Chunk {

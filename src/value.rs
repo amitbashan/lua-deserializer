@@ -9,6 +9,15 @@ pub enum Value<'a> {
 }
 
 named!(
+	pub parse_str(&[u8]) -> &str,
+	do_parse!(
+		name_length: le_u32 >>
+		name: take_str!(name_length) >>
+		(name)
+	)
+);
+
+named!(
 	pub parse(&[u8]) -> Value,
 	do_parse!(
 		value: switch!(
@@ -23,8 +32,7 @@ named!(
 				(Value::Number(value))
 			) |
 			4 => do_parse!(
-				length: le_u32 >>
-				string: take_str!(length) >>
+				string: parse_str >>
 				(Value::String(string))
 			)
 		) >>
