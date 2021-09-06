@@ -1,20 +1,25 @@
-use nom::{*, number::complete::*};
+use nom::{
+	*,
+	combinator::*,
+	multi::*,
+	number::complete::*,
+};
 
 use crate::{
 	chunk::function::{
 		debug::{
-			local::{*, parse as parse_local},
-			position::{*, parse as parse_positions},
-			upvalue::parse as parse_upvalues,
+			local::*,
+			position::*,
+			upvalue,
 		},
-		vararg::{*, parse as parse_vararg},
+		ellipsis::*,
 	},
-	instruction::{*, parse as parse_instruction},
-	value::{*, parse as parse_value},
+	instruction::*,
+	value::*,
 };
 
 mod debug;
-mod vararg;
+mod ellipsis;
 
 #[derive(Debug)]
 pub struct Function<'a> {
@@ -30,26 +35,26 @@ pub struct Function<'a> {
 	pub upvalues: Option<Vec<&'a str>>,
 }
 
-named!(
-	pub parse(&[u8]) -> Function,
-	do_parse!(
-		line_defined: le_u32 >>
-		last_line_defined: le_u32 >>
-		upvalues_length: le_u8 >>
-		parameters_length: le_u8 >>
-		vararg_flag: parse_vararg >>
-		maximum_stack_size: le_u8 >>
-		code_length: le_u32 >>
-		code: count!(parse_instruction, code_length as usize) >>
-		constants_length: le_u32 >>
-		constants: count!(parse_value, constants_length as usize) >>
-		closures_length: le_u32 >>
-		closures: count!(parse, closures_length as usize) >>
-		positions: opt!(parse_positions) >>
-		locals_length: le_u32 >>
-		locals: opt!(count!(parse_local, locals_length as usize)) >>
-		upvalues: opt!(parse_upvalues) >>
-		(
+impl Function<'_> {
+	pub fn parse(input: &[u8]) -> IResult<&[u8], Function> {
+		let (input, line_defined) = le_u32(input)?;
+		let (input, last_line_defined) = le_u32(input)?;
+		let (input, upvalues_length) = le_u8(input)?;
+		let (input, parameters_length) = le_u8(input)?;
+		let (input, vararg_flag) = ellipsis::parse(input)?;
+		let (input, maximum_stack_size) = le_u8(input)?;
+		let (input, code_length) = le_u32(input)?;
+		let (input, code) = count(Instruction::parse, code_length as usize)(input)?;
+		let (input, constants_length) = le_u32(input)?;
+		let (input, constants) = count(Value::parse, constants_length as usize)(input)?;
+		let (input, closures_length) = le_u32(input)?;
+		let (input, closures) = count(Self::parse, closures_length as usize)(input)?;
+		let (input, positions) = opt(Position::parse)(input)?;
+		let (input, locals) = opt(Local::parse)(input)?;
+		let (input, upvalues) = opt(upvalue::parse)(input)?;
+
+
+		Ok((input,
 			Function {
 				line_defined,
 				last_line_defined,
@@ -62,6 +67,6 @@ named!(
 				locals,
 				upvalues,
 			}
-		)
-	)
-);
+		))
+	}
+}

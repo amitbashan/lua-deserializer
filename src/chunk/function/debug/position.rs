@@ -1,4 +1,5 @@
 use nom::{*, number::complete::*};
+use nom::multi::count;
 
 #[derive(Debug)]
 pub struct Position {
@@ -6,21 +7,21 @@ pub struct Position {
 	pub source: u32,
 }
 
-named!(
-	pub parse(&[u8]) -> Vec<Position>,
-	do_parse!(
-		positions_length: le_u32 >>
-		sources: count!(le_u32, positions_length as usize) >>
-		positions:
-			value!((0..positions_length)
-				.zip(sources)
+impl Position {
+	pub fn parse(input: &[u8]) -> IResult<&[u8], Vec<Position>> {
+		let (input, positions_length) = le_u32(input)?;
+		let (input, source_positions) = count(le_u32, positions_length as usize)(input)?;
+
+		Ok((input,
+			(0..positions_length)
+				.zip(source_positions)
 				.map(
 					|(instruction, source)|
 						Position {
 							instruction,
 							source,
 						}
-			).collect()) >>
-		(positions)
-	)
-);
+				).collect()
+		))
+	}
+}

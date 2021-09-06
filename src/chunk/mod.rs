@@ -1,8 +1,5 @@
 use nom::*;
 
-use function::parse as parse_function;
-use header::parse as parse_header;
-
 use crate::value::parse_str;
 
 pub mod header;
@@ -15,18 +12,16 @@ pub struct Chunk<'a> {
 	main: function::Function<'a>,
 }
 
-named!(
-	pub parse(&[u8]) -> Chunk,
-	do_parse!(
-		header: parse_header >>
-		source_name: parse_str >>
-		main: parse_function >>
-		(
-			Chunk {
-				header,
-				source_name,
-				main,
-			}
-		)
-	)
-);
+pub fn parse(input: &[u8]) -> IResult<&[u8], Chunk> {
+	let (input, header) = header::parse(input)?;
+	let (input, source_name) = parse_str(input)?;
+	let (input, main) = function::Function::parse(input)?;
+
+	Ok((input,
+		Chunk {
+			header,
+			source_name,
+			main,
+		},
+	))
+}
