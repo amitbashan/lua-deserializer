@@ -1,5 +1,4 @@
-use nom::{*, number::complete::*};
-use nom::multi::count;
+use nom::{*, multi::*, number::complete::*};
 
 #[derive(Debug)]
 pub struct Position {
