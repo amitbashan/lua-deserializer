@@ -7,7 +7,7 @@ pub struct Position {
 }
 
 impl Position {
-	pub fn parse(input: &[u8]) -> IResult<&[u8], Vec<Position>> {
+	pub fn parse(input: &[u8]) -> IResult<&[u8], Vec<Self>> {
 		let (input, positions_length) = le_u32(input)?;
 		let (input, source_positions) = count(le_u32, positions_length as usize)(input)?;
 
@@ -16,7 +16,7 @@ impl Position {
 				.zip(source_positions)
 				.map(
 					|(instruction, source)|
-						Position {
+						Self {
 							instruction,
 							source,
 						}

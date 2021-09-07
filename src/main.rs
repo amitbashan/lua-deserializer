@@ -23,7 +23,7 @@ fn main() -> Result<()> {
 
 	input.read(&mut buffer)?;
 
-	let chunk = chunk::parse(&buffer)
+	let chunk = chunk::Chunk::parse(&buffer)
 		.map_err(|error| clap::Error {
 			message: error.to_string(),
 			kind: ErrorKind::Io,

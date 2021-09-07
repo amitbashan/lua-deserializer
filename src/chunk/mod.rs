@@ -12,16 +12,18 @@ pub struct Chunk<'a> {
 	main: function::Function<'a>,
 }
 
-pub fn parse(input: &[u8]) -> IResult<&[u8], Chunk> {
-	let (input, header) = header::parse(input)?;
-	let (input, source_name) = parse_str(input)?;
-	let (input, main) = function::Function::parse(input)?;
+impl<'a> Chunk<'a> {
+	pub fn parse(input: &'a [u8]) -> IResult<&'a [u8], Self> {
+		let (input, header) = header::Header::parse(input)?;
+		let (input, source_name) = parse_str(input)?;
+		let (input, main) = function::Function::parse(input)?;
 
-	Ok((input,
-		Chunk {
-			header,
-			source_name,
-			main,
-		},
-	))
+		Ok((input,
+			Self {
+				header,
+				source_name,
+				main,
+			},
+		))
+	}
 }

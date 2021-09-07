@@ -13,26 +13,26 @@ pub enum Value<'a> {
 	String(&'a str),
 }
 
-impl Value<'_> {
-	pub fn parse(input: &[u8]) -> IResult<&[u8], Value> {
+impl<'a> Value<'a> {
+	pub fn parse(input: &'a [u8]) -> IResult<&'a [u8], Self> {
 		let (input, kind) = le_u8(input)?;
 
 		match kind {
-			0 => Ok((input, Value::Nil)),
+			0 => Ok((input, Self::Nil)),
 			1 => {
 				let (input, value) = le_u8(input)?;
 
-				Ok((input, Value::Boolean(value != 0)))
+				Ok((input, Self::Boolean(value != 0)))
 			}
 			3 => {
 				let (input, value) = le_f64(input)?;
 
-				Ok((input, Value::Number(value)))
+				Ok((input, Self::Number(value)))
 			}
 			4 => {
 				let (input, value) = parse_str(input)?;
 
-				Ok((input, Value::String(value)))
+				Ok((input, Self::String(value)))
 			}
 			_ => Err(
 				Err::Failure(

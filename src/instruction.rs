@@ -25,7 +25,7 @@ pub enum Instruction {
 }
 
 impl Instruction {
-	pub fn parse(input: &[u8]) -> IResult<&[u8], Instruction> {
+	pub fn parse(input: &[u8]) -> IResult<&[u8], Self> {
 		let (input, operation_code) = Self::parse_operation_code(input)?;
 
 		match operation_code {
@@ -38,7 +38,7 @@ impl Instruction {
 			37 => {
 				let (input, abc) = Self::parse_abc(input)?;
 
-				Ok((input, Instruction::from((operation_code, abc))))
+				Ok((input, Self::from((operation_code, abc))))
 			}
 			1 |
 			5 |
@@ -46,13 +46,13 @@ impl Instruction {
 			36 => {
 				let (input, abx) = Self::parse_abx(input)?;
 
-				Ok((input, Instruction::from((operation_code, abx))))
+				Ok((input, Self::from((operation_code, abx))))
 			}
 			23 |
 			31..=32 => {
 				let (input, (a, bx)) = Self::parse_abx(input)?;
 
-				Ok((input, Instruction::from((operation_code, (a, bx as i16)))))
+				Ok((input, Self::from((operation_code, (a, bx as i16)))))
 			}
 			_ => Err(
 				Err::Failure(
