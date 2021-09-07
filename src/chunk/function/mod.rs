@@ -53,7 +53,6 @@ impl<'a> Function<'a> {
 		let (input, locals) = opt(Local::parse)(input)?;
 		let (input, upvalues) = opt(upvalue::parse)(input)?;
 
-
 		Ok((input,
 			Self {
 				line_defined,
