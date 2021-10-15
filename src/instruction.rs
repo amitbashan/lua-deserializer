@@ -36,23 +36,45 @@ impl Instruction {
 			24..=30 |
 			33..=35 |
 			37 => {
-				let (input, abc) = Self::parse_abc(input)?;
+				let (input, (a, b, c)) = Self::parse_abc(input)?;
 
-				Ok((input, Self::from((operation_code, abc))))
+				Ok(
+					(input,
+					 Self::ABC {
+						 operation_code,
+						 a,
+						 b,
+						 c,
+					 }
+					))
 			}
 			1 |
 			5 |
 			7 |
 			36 => {
-				let (input, abx) = Self::parse_abx(input)?;
+				let (input, (a, bx)) = Self::parse_abx(input)?;
 
-				Ok((input, Self::from((operation_code, abx))))
+				Ok(
+					(input,
+					 Self::ABx {
+						 operation_code,
+						 a,
+						 bx,
+					 }
+					))
 			}
 			23 |
 			31..=32 => {
 				let (input, (a, bx)) = Self::parse_abx(input)?;
 
-				Ok((input, Self::from((operation_code, (a, bx as i16)))))
+				Ok(
+					(input,
+					 Self::AsBx {
+						 operation_code,
+						 a,
+						 sbx: bx as i16,
+					 }
+					))
 			}
 			_ => Err(
 				Err::Failure(
@@ -79,36 +101,5 @@ impl Instruction {
 		let (input, bx) = le_u16(input)?;
 
 		Ok((input, (a, bx)))
-	}
-}
-
-impl From<(u8, (u8, u8, u8))> for Instruction {
-	fn from((operation_code, (a, b, c)): (u8, (u8, u8, u8))) -> Self {
-		Self::ABC {
-			operation_code,
-			a,
-			b,
-			c,
-		}
-	}
-}
-
-impl From<(u8, (u8, u16))> for Instruction {
-	fn from((operation_code, (a, bx)): (u8, (u8, u16))) -> Self {
-		Self::ABx {
-			operation_code,
-			a,
-			bx,
-		}
-	}
-}
-
-impl From<(u8, (u8, i16))> for Instruction {
-	fn from((operation_code, (a, sbx)): (u8, (u8, i16))) -> Self {
-		Self::AsBx {
-			operation_code,
-			a,
-			sbx,
-		}
 	}
 }
