@@ -45,8 +45,8 @@ impl Instruction {
 						 a,
 						 b,
 						 c,
-					 }
-					))
+					 })
+				)
 			}
 			1 |
 			5 |
@@ -60,8 +60,8 @@ impl Instruction {
 						 operation_code,
 						 a,
 						 bx,
-					 }
-					))
+					 })
+				)
 			}
 			23 |
 			31..=32 => {
@@ -73,8 +73,8 @@ impl Instruction {
 						 operation_code,
 						 a,
 						 sbx: bx as i16,
-					 }
-					))
+					 })
+				)
 			}
 			_ => Err(
 				Err::Failure(
